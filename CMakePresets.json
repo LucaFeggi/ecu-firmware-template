@@ -1,0 +1,70 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "host-debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/.build/host-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "ECU_CONFIG": "posix",
+        "ECU_HOST_TEST_DURATION_TICKS": "600"
+      }
+    },
+    {
+      "name": "host-sanitized",
+      "inherits": "host-debug",
+      "binaryDir": "${sourceDir}/.build/host-sanitized",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer",
+        "CMAKE_C_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
+      }
+    },
+    {
+      "name": "stm32h743vit6-debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/.build/stm32h743vit6-debug",
+      "toolchainFile": "${sourceDir}/cmake/toolchains/arm-none-eabi.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "ECU_CONFIG": "stm32h743vit6"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "host-debug",
+      "configurePreset": "host-debug"
+    },
+    {
+      "name": "host-sanitized",
+      "configurePreset": "host-sanitized"
+    },
+    {
+      "name": "stm32h743vit6-debug",
+      "configurePreset": "stm32h743vit6-debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "host-debug",
+      "configurePreset": "host-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "host-sanitized",
+      "configurePreset": "host-sanitized",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
